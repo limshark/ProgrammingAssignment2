@@ -2,31 +2,31 @@
 #
 #   File:  cachematrix.R
 # 
-#   Synopsys: This file contains two utility function and one unit test function, these are 
+#   Synopsys: This file contains two utility functions and one unit test function, these are 
 #          explained below
 # 
-#         a)  makeCacheMatrix()  to create a special Matrix class which 
-#                   provides the content for storing and retriving the inverseMatrix once computed. 
+#         a)  makeCacheMatrix(): function to create a special Matrix class which 
+#                   provides the content for storing and retrieving the inverseMatrix once it is computed. 
 #         
-#         b) cacheSolve()  function which either 
-#               computes the inverse of the matrix and stores this inverse matrix in 
+#         b) cacheSolve():  function which either 
+#               computes & caches the inverse of the matrix in 
 #                  underlying special matrix
 #              -or 
-#               retrieve the cached inverse Matrix already computed earlier,  
-#               in both cases a solved inverse matrix is returned to the user. 
+#               retrieve the cached inverse Matrix which was already computed earlier.  
+#               In both the cases, a solved inverse matrix is returned to the user. 
 #         
-#         c) assignment2Unittest() this is unit test functions which basically shows how
-#         the makeCacheMatrix() and cacheSolve() nctions are utilized. the unit test computes the 
-#         inverse and recheck my multiplying to the original matrix
-#         to get back the Identity matrix. 
+#         c) assignment2Unittest():  The unit test functions which demonstrates the calling sequence
+#         of the functions makeCacheMatrix() and cacheSolve(). The unit test computes the 
+#         inverse of 3x3 matrix and recheck by multiplying this to the original matrix
+#         to get an the Identity matrix. This identity matrix is then checked if it is really an identity matrix.
 # 
 #
 
 
 
 #===============================================================================
-# makeCacheMatrix() : Takes a invertible matrix and creates a special matrix class whcih 
-# additiona
+# makeCacheMatrix() : Takes a invertible matrix and creates a special matrix class which 
+# additionally stores an cached computed inverse matrix. 
 # 
 #   Input parameters =  x   a matrix which is assumed to be invertible.  
 # 
@@ -34,9 +34,10 @@
 # 
 # Description: the function takes a matrix ( which is assumed to be invertible) and 
 # creates a special Matrix class which additionally allows inverse matrix to be cached and kept. 
-# The class provides set and get method for the basic matrix which is passed during creation, 
+# The class provides the set and get method for the basic matrix which was  passed during the creation, 
 # the operator <<- is used to check for the variable in scope before  deciding to update the 
-# existing one or create a new one. when a set is called the cached inverse matrix is reset back to NULL
+# existing variable or create a new variable. This lexical scoping helps to have a caching of variable. 
+#  When the set method is called, then the cached inverse matrix is reset back to NULL.
 # 
 #    Functions
 #           get()  : returns the original Matrix
@@ -53,7 +54,7 @@ makeCacheMatrix <- function(x = matrix()) {
   inverseMatrix <- NULL 
   
   # -----------------------------------------------------------------------------------------
-  # set function : sets the passed Matrix as the new data and resets the cached inverseMatrix
+  # set function : sets the passed Matrix as the new data and resets the cached inverseMatrix to NULL
   set <- function(replacedMatrix) {
     x <<- replacedMatrix 
     inverseMatrix <<- NULL 
@@ -61,7 +62,7 @@ makeCacheMatrix <- function(x = matrix()) {
   
   
   # -----------------------------------------------------------------------------------------
-  # get function: Get the corresponding matrix for which the inverse is to be calculated. 
+  # get function: Gets the original matrix for which the inverse is to be calculated. 
   get <- function() {
     x
   }
@@ -86,20 +87,20 @@ makeCacheMatrix <- function(x = matrix()) {
 
 
 #===============================================================================
-# cacheSolve() : Takes the special matrix created earlier and computes the inversematrix by
+# cacheSolve() : Takes the special matrix created earlier as a parameter and computes the inversematrix by
 # calling function "solve()", the extra parameters are passed to the "solve()" funciton. the function
 # caches the computed inverse matrix in the underlying special matrix which was passed as parameters. 
 # additiona
 # 
-#   Input parameters =  x   the special matrix which was created by makeCacheMatrix()   
+#   Input parameters =  x   the special matrix which was earlier created by makeCacheMatrix()   
 # 
 #   returned parameters : a inverse matrix 
 # 
-# Description:  The algorithm is as follows 
+# Description:  The algorithm functions as follows 
 # 
-#       - retrieves the inverse from the special matrix to check if inverse was caches.
+#       - retrieves the inverse from the special matrix to check if inverse was cached ( Non NULL).
 #       -  if it is already cached, then return the cached version to the user
-#       - if it is not cached, then inverse is calculated and cache is updated 
+#       - if it is not cached, then inverse is computed and cache is updated 
 #       - finally the computed inverse is returned to the user. 
 # 
 #   
